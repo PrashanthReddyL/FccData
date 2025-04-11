@@ -14,13 +14,14 @@ import org.example.model.Record;
 @Component
 public class DataLoader {
 
-  /*  @Autowired
+    @Autowired
     private RecordDAO recordDAO;
 
-    public void run(String fileName) throws Exception {
-        List<Record> records = new ArrayList<>();
+    public void save(String fileName) throws Exception {
+
+        List<Record> records = readFileLines(fileName);
         recordDAO.saveAll(records);
-    }*/
+    }
 
     public  List<Record> readFileLines(String filename) {
         List<Record> records = new ArrayList<>();

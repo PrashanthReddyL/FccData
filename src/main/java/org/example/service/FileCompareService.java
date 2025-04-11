@@ -1,5 +1,7 @@
 package org.example.service;
 
+import org.example.dal.DataLoader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -17,7 +19,8 @@ import java.util.Map;
 public class FileCompareService {
 
     private static final String DELIMITER = "\\|";
-
+@Autowired
+    DataLoader dataLoader;
     public String process() {
         Path filePath1 = Paths.get(getClass().getResource("/files/a_tower_New/RA.dat").getPath());
         Path filePath2 = Paths.get(getClass().getResource("/files/a_tower_Old/RA.dat").getPath());
@@ -47,8 +50,11 @@ public class FileCompareService {
                     writer.newLine();
                 }
             }
+            dataLoader.save(outputFile.getName());
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         return result.toString();
     }

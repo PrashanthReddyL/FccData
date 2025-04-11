@@ -1,4 +1,3 @@
-/*
 package org.example.dal;
 
 import org.example.model.Record;
@@ -19,4 +18,3 @@ public class RecordDAO {
         recordRepository.saveAll(records);
     }
 }
-*/

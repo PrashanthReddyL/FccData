@@ -1,16 +1,16 @@
 package org.example.model;
 
-/*import jakarta.persistence.Entity;
+import jakarta.persistence.Entity;
 
-import jakarta.persistence.Id;*/
+import jakarta.persistence.Id;
 
 import lombok.Data;
 
-//@Entity
+@Entity(name = "record")
 @Data
 public class Record {
 
-    //@Id
+    @Id
     private String recordType;
     private String contentIndicator;
     private String fileNumber;
