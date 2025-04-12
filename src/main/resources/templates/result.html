@@ -37,12 +37,38 @@
             color: #ccc;
             pointer-events: none;
         }
+         .download-container {
+             display: flex; /* Enable flexbox for centering */
+             justify-content: center; /* Center horizontally */
+             margin-bottom: 10px; /* Add some space below the button */
+             width: 100%; /* Ensure it spans the width of the table */
+         }
+
+        .download-button {
+            /* Add any specific styling for the button itself */
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none; /* If using an <a> tag */
+        }
+
+        .download-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
 <h1>RA record List</h1>
 <table th:if="${not #lists.isEmpty(data)}">
     <thead>
+    <div class="download-container">
+        <button class="download-button" onclick="window.location.href='/dat/download'">
+            Download .dat File
+        </button>
+    </div>
     <tr>
         <th>ID</th>
         <th>fileNumer</th>

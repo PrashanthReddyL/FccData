@@ -68,6 +68,7 @@ public class FileCompareService {
                     }
                 }
             }
+             System.out.println("No.of Lines: " + numLines + " present in file2.dat but not in file1.dat:----");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
