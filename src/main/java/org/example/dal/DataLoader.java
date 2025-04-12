@@ -1,6 +1,8 @@
 package org.example.dal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -25,9 +27,12 @@ public class DataLoader {
     private RecordDAO recordDAO;
 
     public void save(File file) throws Exception {
-
         List<Record> records = readFileToList(file);
         recordDAO.saveAll(records);
+    }
+
+    public Page<Record> findAll(Pageable pageable) {
+        return recordDAO.findAll(pageable);
     }
 
     public List<Record> readFileToList(File file) throws IOException {
