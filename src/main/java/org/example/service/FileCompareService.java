@@ -50,12 +50,20 @@ public class FileCompareService {
                     writer.newLine();
                 }
             }
-            dataLoader.save(outputFile.getName());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return result.toString();
+    }
+
+    public void load() {
+        try {
+            Path path = Paths.get("result.dat");
+            dataLoader.save(path.toFile());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -2,6 +2,7 @@ package org.example.configuration;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -17,23 +18,23 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EnableJpaRepositories(
-        basePackages = {"org.example"},
+/*@EnableJpaRepositories(
+        basePackages = {"org.example.dal", "org.example.model"},
         entityManagerFactoryRef = "primaryEntityManagerFactory",
         transactionManagerRef = "primaryTransactionManager")
 @EnableTransactionManagement
+@EntityScan(basePackages = {"org.example.dal", "org.example.model"})*/
 public class DataSourceConfig {
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DataSourceConfig.class);
     @Bean(name = "primaryDataSource")
     public DataSource dataSource() {
-        // Configure the DataSource with your SQL Server connection details
 
         try {
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
             dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            dataSource.setUrl("jdbc:sqlserver://fccdata.database.windows.net:1433;database=fcc-data-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
-            dataSource.setUsername("fccuser1@fccdata");
-            dataSource.setPassword("Fccdata");
+            dataSource.setUrl("jdbc:sqlserver://;serverName=fcc-db-server.database.windows.net;databaseName=fcc-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
+            dataSource.setUsername("fcc-admin@fcc-db-server");
+            dataSource.setPassword("Akhil@123");
             logger.info("datasource created");
             return dataSource;
         } catch (Exception e) {
@@ -47,7 +48,7 @@ public class DataSourceConfig {
                 .driverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver")
                 .build();*/
     }
-    @Bean(name = "primaryEntityManagerFactory")
+    /*@Bean(name = "primaryEntityManagerFactory")
     public EntityManagerFactory entityManagerFactory(
             @Qualifier("primaryDataSource") DataSource primaryDataSource) {
         Properties properties = new Properties();
@@ -62,7 +63,7 @@ public class DataSourceConfig {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan("com.walmart.wfs.data.services.dal");
+        factory.setPackagesToScan("org.example.dal");
         factory.setDataSource(primaryDataSource);
         factory.setJpaProperties(properties);
         factory.afterPropertiesSet();
@@ -75,5 +76,5 @@ public class DataSourceConfig {
     public PlatformTransactionManager firstTransactionManager(
             @Qualifier("primaryEntityManagerFactory") EntityManagerFactory firstEntityManagerFactory) {
         return new JpaTransactionManager(firstEntityManagerFactory);
-    }
+    }*/
 }

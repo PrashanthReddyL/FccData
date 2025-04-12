@@ -4,12 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.example.model.Record;
+import org.springframework.util.ResourceUtils;
 
 @Component
 public class DataLoader {
@@ -17,16 +24,32 @@ public class DataLoader {
     @Autowired
     private RecordDAO recordDAO;
 
-    public void save(String fileName) throws Exception {
+    public void save(File file) throws Exception {
 
-        List<Record> records = readFileLines(fileName);
+        List<Record> records = readFileToList(file);
         recordDAO.saveAll(records);
     }
 
+    public List<Record> readFileToList(File file) throws IOException {
+       // File file = ResourceUtils.getFile("classpath:" + filePath);
+        List<Record> records = new ArrayList<>();
+        Path path = file.toPath();
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Parse the line and create a Record object
+                Record record = parseLineToRecord(line);
+                records.add(record);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
     public  List<Record> readFileLines(String filename) {
         List<Record> records = new ArrayList<>();
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filename);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        Path filePath1 = Paths.get(getClass().getResource("/"+filename).getPath());
+        try (BufferedReader reader = Files.newBufferedReader(filePath1)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 // Parse the line and create a Record object
@@ -77,7 +100,7 @@ public class DataLoader {
         record.setHeightOfStructure(getFieldValue(fields, 28));
         record.setGroundElevation(getFieldValue(fields, 29));
         record.setOverallHeightAboveGround(getFieldValue(fields, 30));
-        record.setOverallHeightAmsl(getFieldValue(fields, 31));
+        record.setOverallHeightAMSL(getFieldValue(fields, 31));
         record.setStructureType(getFieldValue(fields, 32));
         record.setDateFaaDeterminationIssued(getFieldValue(fields, 33));
         record.setFaaStudyNumber(getFieldValue(fields, 34));
@@ -86,7 +109,7 @@ public class DataLoader {
         record.setPaintingAndLighting(getFieldValue(fields, 37));
         record.setProposedMarkingAndLighting(getFieldValue(fields, 38));
         record.setMarkingAndLightingOther(getFieldValue(fields, 39));
-        record.setFaaEmiFlag(getFieldValue(fields, 40));
+        record.setFaaEMIFlag(getFieldValue(fields, 40));
         record.setNepaFlag(getFieldValue(fields, 41));
         record.setDateSigned(getFieldValue(fields, 42));
         record.setAssignorSignatureLastName(getFieldValue(fields, 43));
