@@ -8,13 +8,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-@RestController
+@Controller
 @RequestMapping("/dat")
 public class FileCompareController {
 
@@ -32,13 +33,22 @@ public class FileCompareController {
     }
 
     @GetMapping("/data")
-    public Page<Record> getRecords(@RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "10") int size) {
+    public String getRecords(@RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "10") int size,
+                             Model model) {
+        //Page<Record>
         Pageable pageable = PageRequest.of(page, size);
-        return fileCompareService.findAll(pageable);
+        Page<Record> records = fileCompareService.findAll(pageable);
+        model.addAttribute("data", records.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", records.getTotalPages());
+        model.addAttribute("totalItems", records.getTotalElements());
+        model.addAttribute("pageSize", size);
+        return "result";
+        //return records;
     }
 
-    @GetMapping("/health")
+    @GetMapping("health")
     public String health() {
         return ResponseEntity.ok().toString();
     }

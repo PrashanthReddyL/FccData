@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>RA record List</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            margin: 0 2px;
+            border-radius: 4px;
+        }
+        .pagination .current {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        .pagination .disabled {
+            color: #ccc;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<h1>RA record List</h1>
+<table th:if="${not #lists.isEmpty(data)}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>fileNumer</th>
+        <th>dateEntered</th>
+        <th>FirstName</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="record : ${data}">
+        <td th:text="${record.uniqueSystemIdentifier}"></td>
+        <td th:text="${record.fileNumber}"></td>
+        <td th:text="${record.dateEntered}"></td>
+        <td th:text="${record.signatureFirstName}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<p th:unless="${not #lists.isEmpty(data)}">No objects found.</p>
+
+<div class="pagination" th:if="${totalPages > 1}">
+    <a th:if="${currentPage > 0}" th:href="@{/dat/data(page=${currentPage - 1}, size=${pageSize})}">&laquo; Previous</a>
+
+    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:if="${i != currentPage}" th:href="@{/dat/data(page=${i}, size=${pageSize})}" th:text="${i + 1}"></a>
+            <span th:unless="${i != currentPage}" class="current" th:text="${i + 1}"></span>
+        </span>
+
+    <a th:if="${currentPage < totalPages - 1}" th:href="@{/dat/data(page=${currentPage + 1}, size=${pageSize})}">Next &raquo;</a>
+</div>
+
+<p th:text="${'Total items: ' + totalItems}"></p>
+<p th:text="${'Page ' + (currentPage + 1) + ' of ' + totalPages}"></p>
+</body>
+</html>

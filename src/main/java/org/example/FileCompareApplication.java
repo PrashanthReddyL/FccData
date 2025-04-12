@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication()
+@SpringBootApplication(scanBasePackages = {"org.example"})
 //@EntityScan(basePackages = {"com.example"})
 //@EnableJpaRepositories(basePackages = "org.example", excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = RecordRepository.class))
 public class FileCompareApplication {
