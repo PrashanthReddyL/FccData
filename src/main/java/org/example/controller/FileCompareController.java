@@ -97,7 +97,7 @@ public class FileCompareController {
         }
     }
 
-    @GetMapping("health")
+    @GetMapping("/health")
     public String health() {
         return ResponseEntity.ok().toString();
     }
