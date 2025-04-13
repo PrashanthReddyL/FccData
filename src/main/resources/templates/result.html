@@ -99,6 +99,29 @@
             margin: 0 5px;
             color: #777;
         }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .arrow, .page-info {
+            display: inline-block;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 0 5px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .arrow:disabled {
+            color: #999;
+            border-color: #ddd;
+            background-color: #f4f4f4;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -128,7 +151,7 @@
 
 <p th:unless="${not #lists.isEmpty(data)}">No objects found.</p>
 
-<div class="pagination" th:if="${totalPages > 1}">
+<!--<div class="pagination" th:if="${totalPages > 1}">
     <a th:if="${currentPage > 0}" th:href="@{/dat/data(page=0, size=${pageSize})}" class="pagination-button">&laquo;&laquo;&laquo;</a>
 
     <a th:if="${currentPage > 0}" th:href="@{/dat/data(page=${currentPage - 1}, size=${pageSize})}" class="pagination-button">&laquo;</a>
@@ -150,6 +173,12 @@
     <a th:if="${currentPage < totalPages - 1}" th:href="@{/dat/data(page=${currentPage + 1}, size=${pageSize})}" class="pagination-button">&raquo;</a>
 
     <a th:if="${currentPage < totalPages - 1}" th:href="@{/dat/data(page=${totalPages - 1}, size=${pageSize})}" class="pagination-button">&raquo;&raquo;&raquo;</a>
+</div>-->
+
+<div class="pagination">
+    <button class="arrow" th:disabled="${currentPage == 0}" th:onclick="|window.location.href='@{/dat/data(page=${currentPage - 1}, size=${pageSize})}'|">&laquo;</button>
+    <span class="page-info">Page <span th:text="${currentPage + 1}"></span> of <span th:text="${totalPages}"></span></span>
+    <button class="arrow" th:disabled="${currentPage >= totalPages - 1}" th:onclick="|window.location.href='@{/dat/data(page=${currentPage + 1}, size=${pageSize})}'|">&raquo;</button>
 </div>
 
 <!--<p th:text="${'Total items: ' + totalItems}"></p>-->
