@@ -3,72 +3,112 @@
 <head>
     <title>RA record List</title>
     <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .download-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .download-button {
+            padding: 12px 20px;
+            background-color: #28a745; /* A nice green */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            text-decoration: none; /* If using <a> */
+        }
+
+        .download-button:hover {
+            background-color: #1e7e34;
+        }
+
         table {
-            border-collapse: collapse;
             width: 80%;
-            margin: 20px auto;
+            margin: 0 auto; /* Center the table */
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
+
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px 15px;
             text-align: left;
+            border-bottom: 1px solid #ddd;
         }
+
         th {
-            background-color: #f2f2f2;
+            background-color: #007bff; /* A primary blue */
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
         }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #e9ecef;
+        }
+
         .pagination {
             text-align: center;
             margin-top: 20px;
         }
+
         .pagination a, .pagination span {
             display: inline-block;
             padding: 8px 12px;
             text-decoration: none;
-            border: 1px solid #ddd;
-            margin: 0 2px;
+            border: 1px solid #ccc;
             border-radius: 4px;
+            margin: 0 5px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
         }
-        .pagination .current {
-            background-color: #4CAF50;
-            color: white;
-            border-color: #4CAF50;
-        }
-        .pagination .disabled {
-            color: #ccc;
-            pointer-events: none;
-        }
-         .download-container {
-             display: flex; /* Enable flexbox for centering */
-             justify-content: center; /* Center horizontally */
-             margin-bottom: 10px; /* Add some space below the button */
-             width: 100%; /* Ensure it spans the width of the table */
-         }
 
-        .download-button {
-            /* Add any specific styling for the button itself */
-            padding: 10px 15px;
+        .pagination a:hover {
+            background-color: #eee;
+        }
+
+        .pagination .current {
             background-color: #007bff;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none; /* If using an <a> tag */
+            border-color: #007bff;
         }
 
-        .download-button:hover {
-            background-color: #0056b3;
+        .pagination .dots {
+            padding: 8px 12px;
+            margin: 0 5px;
+            color: #777;
         }
     </style>
 </head>
 <body>
-<h1>RA record List</h1>
+<h1>RA record List<span style="color: #777; font-size: 0.8em;">(Total records: <span th:text="${totalItems}"></span>)</span></h1>
+<div class="download-container">
+    <a href="/dat/download" class="download-button">Download .dat File</a>
+</div>
+
 <table th:if="${not #lists.isEmpty(data)}">
     <thead>
-    <div class="download-container">
-        <button class="download-button" onclick="window.location.href='/dat/download'">
-            Download .dat File
-        </button>
-    </div>
     <tr>
         <th>ID</th>
         <th>fileNumer</th>
@@ -89,17 +129,30 @@
 <p th:unless="${not #lists.isEmpty(data)}">No objects found.</p>
 
 <div class="pagination" th:if="${totalPages > 1}">
-    <a th:if="${currentPage > 0}" th:href="@{/dat/data(page=${currentPage - 1}, size=${pageSize})}">&laquo; Previous</a>
+    <a th:if="${currentPage > 0}" th:href="@{/dat/data(page=0, size=${pageSize})}" class="pagination-button">&laquo;&laquo;&laquo;</a>
 
-    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:if="${i != currentPage}" th:href="@{/dat/data(page=${i}, size=${pageSize})}" th:text="${i + 1}"></a>
-            <span th:unless="${i != currentPage}" class="current" th:text="${i + 1}"></span>
-        </span>
+    <a th:if="${currentPage > 0}" th:href="@{/dat/data(page=${currentPage - 1}, size=${pageSize})}" class="pagination-button">&laquo;</a>
 
-    <a th:if="${currentPage < totalPages - 1}" th:href="@{/dat/data(page=${currentPage + 1}, size=${pageSize})}">Next &raquo;</a>
+    <a th:if="${totalPages > 5 and currentPage > 2}" th:href="@{/dat/data(page=0, size=${pageSize})}" class="pagination-button">1</a>
+    <span th:if="${totalPages > 5 and currentPage > 2}" class="dots">...</span>
+
+    <span th:each="i : ${#numbers.sequence(
+        T(java.lang.Math).max(0, currentPage - 2),
+        T(java.lang.Math).min(totalPages - 1, currentPage + 2)
+    )}">
+        <a th:if="${i != currentPage}" th:href="@{/dat/data(page=${i}, size=${pageSize})}" class="pagination-button" th:text="${i + 1}"></a>
+        <span th:unless="${i != currentPage}" class="pagination-button current" th:text="${i + 1}"></span>
+    </span>
+
+    <span th:if="${totalPages > 5 and currentPage < totalPages - 3}" class="dots">...</span>
+    <a th:if="${totalPages > 1 and totalPages > 5 and currentPage < totalPages - 3}" th:href="@{/dat/data(page=${totalPages - 1}, size=${pageSize})}" class="pagination-button" th:text="${totalPages}"></a>
+
+    <a th:if="${currentPage < totalPages - 1}" th:href="@{/dat/data(page=${currentPage + 1}, size=${pageSize})}" class="pagination-button">&raquo;</a>
+
+    <a th:if="${currentPage < totalPages - 1}" th:href="@{/dat/data(page=${totalPages - 1}, size=${pageSize})}" class="pagination-button">&raquo;&raquo;&raquo;</a>
 </div>
 
-<p th:text="${'Total items: ' + totalItems}"></p>
-<p th:text="${'Page ' + (currentPage + 1) + ' of ' + totalPages}"></p>
+<!--<p th:text="${'Total items: ' + totalItems}"></p>-->
+<!--<p th:text="${'Page ' + (currentPage + 1) + ' of ' + totalPages}"></p>-->
 </body>
 </html>

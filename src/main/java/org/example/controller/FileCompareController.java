@@ -49,9 +49,11 @@ public class FileCompareController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Record> records = fileCompareService.findAll(pageable);
         model.addAttribute("data", records.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", records.getTotalPages());
+        //model.addAttribute("currentPage", page);
+       // model.addAttribute("totalPages", records.getTotalPages());
         model.addAttribute("totalItems", records.getTotalElements());
+        model.addAttribute("currentPage", records != null ? records.getNumber() : 0);
+        model.addAttribute("totalPages", records != null ? records.getTotalPages() : 1);
         model.addAttribute("pageSize", size);
         return "result";
         //return records;
