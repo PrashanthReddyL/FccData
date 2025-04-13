@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dat")
@@ -58,6 +60,25 @@ public class FileCompareController {
         return "result";
         //return records;
     }
+
+    @GetMapping("/records")
+    public ResponseEntity<Map<String, Object>> getDBRecords(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Record> records = fileCompareService.findAll(pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", records.getContent());
+        response.put("currentPage", records.getNumber());
+        response.put("totalItems", records.getTotalElements());
+        response.put("totalPages", records.getTotalPages());
+        response.put("pageSize", size);
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @GetMapping("/download")
     @ResponseBody
