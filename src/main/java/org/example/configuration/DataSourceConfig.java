@@ -33,7 +33,7 @@ public class DataSourceConfig {
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
             dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             dataSource.setUrl("jdbc:sqlserver://;serverName=fccdata-server.database.windows.net;databaseName=fccdata;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
-            dataSource.setUsername("fccadmin@fcc-db-server");
+            dataSource.setUsername("fccadmin@fccdata-server");
             dataSource.setPassword("Bluesky@123");
             logger.info("datasource created");
             return dataSource;
